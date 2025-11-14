@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ session_name }} - Overlay Annotator Report</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        header .meta {
+            opacity: 0.9;
+            font-size: 0.95em;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px 40px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card .number {
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card .label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .entries {
+            padding: 40px;
+        }
+        
+        .entry {
+            margin-bottom: 50px;
+            padding-bottom: 40px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .entry:last-child {
+            border-bottom: none;
+        }
+        
+        .entry-header {
+            margin-bottom: 20px;
+        }
+        
+        .entry-title {
+            font-size: 1.8em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .entry-meta {
+            color: #666;
+            font-size: 0.9em;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .entry-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .entry-meta span::before {
+            content: '•';
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .entry-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+        
+        .layout-top .entry-content {
+            grid-template-columns: 1fr;
+        }
+        
+        .screenshot-container {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background: #f8f9fa;
+        }
+        
+        .screenshot-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .screenshot-label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .notes-container {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .notes-container h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .notes-container p {
+            color: #555;
+            white-space: pre-wrap;
+            line-height: 1.8;
+        }
+        
+        .empty-notes {
+            color: #999;
+            font-style: italic;
+        }
+        
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-size: 0.9em;
+        }
+        
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Print styles */
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; }
+            .entry { page-break-inside: avoid; }
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .entry-content {
+                grid-template-columns: 1fr !important;
+            }
+            
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            .entries {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📸 {{ session_name }}</h1>
+            <div class="meta">
+                Overlay Annotator Report<br>
+                Generated: {{ export_date }}
+            </div>
+        </header>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <span class="number">{{ entries|length }}</span>
+                <span class="label">Total Entries</span>
+            </div>
+            <div class="stat-card">
+                <span class="number">{{ entries|selectattr('notes')|list|length }}</span>
+                <span class="label">With Notes</span>
+            </div>
+            <div class="stat-card">
+                <span class="number">
+                {% if entries %}
+                    {{ (entries|map(attribute='image')|map(attribute='width')|sum // entries|length) }}px
+                {% else %}
+                    0px
+                {% endif %}
+                </span>
+                <span class="label">Avg Width</span>
+            </div>
+        </div>
+        
+        <div class="entries">
+            {% for entry in entries %}
+            <div class="entry layout-{{ entry.layout }}">
+                <div class="entry-header">
+                    <h2 class="entry-title">{{ entry.title }}</h2>
+                    <div class="entry-meta">
+                        <span>{{ entry.timestamp[:10] }}</span>
+                        <span>{{ entry.image.width }} × {{ entry.image.height }}</span>
+                        <span>ID: {{ entry.id }}</span>
+                    </div>
+                </div>
+                
+                <div class="entry-content">
+                    <div class="screenshot-container">
+                        {% if entry.image_base64 %}
+                        <img src="data:image/jpeg;base64,{{ entry.image_base64 }}" 
+                             alt="{{ entry.title }}"
+                             loading="lazy">
+                        <div class="screenshot-label">Screenshot</div>
+                        {% else %}
+                        <div style="padding: 50px; text-align: center; color: #999;">
+                            Image not found
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="notes-container">
+                        <h3>📝 Notes</h3>
+                        {% if entry.notes %}
+                        <p>{{ entry.notes }}</p>
+                        {% else %}
+                        <p class="empty-notes">No notes provided</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <footer>
+            <p>
+                Generated by <strong>Overlay Annotator V3.2</strong><br>
+                Professional screenshot annotation and reporting tool
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
