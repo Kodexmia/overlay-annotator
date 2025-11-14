@@ -1,20 +1,37 @@
-# Overlay Annotator v2
+# Overlay Annotator v3.4.2
 
-A desktop overlay tool for rapid screenshot capture, annotation, and documentation.
+A versatile desktop overlay tool for rapid screenshot capture, annotation, documentation, and structured evidence generation. Designed for developers, QA testers, cybersecurity analysts, trainers, content creators, internal teams, and client-facing workflows.
 
-## Features
+Overlay Annotator turns everyday screenshots into **professional documentation** with minimal effort.
 
-- **Global Hotkey**: Press `Ctrl+Alt+S` anywhere to capture screen regions
-- **Transparent Overlay**: Select any region with a dimmed overlay
-- **Annotation Tools**:
-  - Arrow (A)
-  - Box (B)
-  - Pen (P)
-  - Blur (U)
-  - Text (T)
-- **Floating Toolbar**: Island-style draggable toolbar
-- **Session Management**: Organize captures into sessions
-- **Export**: Generate Markdown reports with images and notes
+---
+
+## Why It’s More Than a Screenshot Tool
+
+Overlay Annotator is built as a **full evidence pipeline**:
+
+Capture → Annotate → Save → Export (Markdown/HTML)
+
+This makes it ideal for:
+
+- Software QA and bug reporting  
+- Cybersecurity incident documentation  
+- Technical walkthroughs and SOPs  
+- UI/UX design notes  
+- Audit trails  
+- Developer onboarding  
+- Client project delivery  
+- Training and learning modules  
+
+Every capture becomes a structured entry with:
+
+- Screenshot  
+- Title  
+- Notes  
+- Annotations  
+- Timestamps  
+- Export-ready formatting  
+
 
 ## Installation
 
